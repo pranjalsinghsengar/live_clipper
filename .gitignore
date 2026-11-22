@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.env
+
+# Pipeline data
+state.db
+downloads/
+clips/
+transcripts/
+logs/
+*.log
+
+# OS
+.DS_Store

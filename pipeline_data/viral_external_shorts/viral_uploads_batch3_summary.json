@@ -1,0 +1,98 @@
+[
+  {
+    "id": 11,
+    "title": "GTA 6: THROWS A GUY INTO A BOAT BLADE! \ud83d\udc80\ud83d\udea4 #shorts #gta6",
+    "file": "pipeline_data/viral_external_shorts/viral_short_11.mp4",
+    "size_mb": 25.49,
+    "target_account": "channel2",
+    "upload": {
+      "youtube": {
+        "video_id": "6BOiiPU2zfw",
+        "account": "channel2",
+        "status": "uploaded",
+        "url": "https://youtube.com/shorts/6BOiiPU2zfw",
+        "custom_thumbnail": false
+      }
+    }
+  },
+  {
+    "id": 12,
+    "title": "GTA 6: FINDS HIS EXACT LOOKALIKE! \ud83d\ude31\ud83d\udc80 #shorts #gta6",
+    "file": "pipeline_data/viral_external_shorts/viral_short_12.mp4",
+    "size_mb": 28.34,
+    "target_account": "channel2",
+    "upload": {
+      "youtube": {
+        "video_id": "o-mvpPDkDqI",
+        "account": "channel2",
+        "status": "uploaded",
+        "url": "https://youtube.com/shorts/o-mvpPDkDqI",
+        "custom_thumbnail": false
+      }
+    }
+  },
+  {
+    "id": 13,
+    "title": "GTA 6: THROWS A GIRL OUT OF A PLANE! \ud83d\ude2d\u2708\ufe0f #shorts #gta6",
+    "file": "pipeline_data/viral_external_shorts/viral_short_13.mp4",
+    "size_mb": 28.09,
+    "target_account": "channel2",
+    "upload": {
+      "youtube": {
+        "video_id": "C_RrUFV5Ke4",
+        "account": "channel2",
+        "status": "uploaded",
+        "url": "https://youtube.com/shorts/C_RrUFV5Ke4",
+        "custom_thumbnail": false
+      }
+    }
+  },
+  {
+    "id": 14,
+    "title": "GTA 6: SPEED HITS 63 MILLION SUBS! \ud83c\udf89\ud83d\udc51 #shorts #gta6",
+    "file": "pipeline_data/viral_external_shorts/viral_short_14.mp4",
+    "size_mb": 25.7,
+    "target_account": "primary",
+    "upload": {
+      "youtube": {
+        "video_id": "--X1NNCiGdY",
+        "account": "primary",
+        "status": "uploaded",
+        "url": "https://youtube.com/shorts/--X1NNCiGdY",
+        "custom_thumbnail": true
+      }
+    }
+  },
+  {
+    "id": 15,
+    "title": "GTA 6: MEETS JIMMY FROM GTA 5! \ud83e\udd2f\ud83d\udd25 #shorts #gta6",
+    "file": "pipeline_data/viral_external_shorts/viral_short_15.mp4",
+    "size_mb": 24.15,
+    "target_account": "primary",
+    "upload": {
+      "youtube": {
+        "video_id": "f9U8zL5SHSw",
+        "account": "primary",
+        "status": "uploaded",
+        "url": "https://youtube.com/shorts/f9U8zL5SHSw",
+        "custom_thumbnail": true
+      }
+    }
+  },
+  {
+    "id": 16,
+    "title": "GTA 6: SPEED MEETS NIKO BELLIC FROM GTA 4! \ud83d\ude31\ud83c\uddf7\ud83c\uddfa #shorts #gta6",
+    "file": "pipeline_data/viral_external_shorts/viral_short_16.mp4",
+    "size_mb": 20.5,
+    "target_account": "primary",
+    "upload": {
+      "youtube": {
+        "video_id": "q3Bv7PAX58E",
+        "account": "primary",
+        "status": "uploaded",
+        "url": "https://youtube.com/shorts/q3Bv7PAX58E",
+        "custom_thumbnail": true
+      }
+    }
+  }
+]

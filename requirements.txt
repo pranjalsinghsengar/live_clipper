@@ -1,0 +1,26 @@
+# Core dependencies (all free, all local)
+# Install with: pip install -r requirements.txt
+
+# --- Video processing ---
+yt-dlp>=2024.8.6            # download YouTube/Vimeo/etc, MIT
+faster-whisper>=1.0.3       # local Whisper transcription (CTranslate2 backend), MIT
+
+# --- Database ---
+# sqlite3 is in the Python stdlib, no extra dep needed
+
+# --- HTTP / API clients ---
+requests>=2.32.0            # Meta Graph API + TikTok API calls, Apache-2.0
+
+# --- YouTube Data API v3 (OAuth + resumable upload) ---
+google-api-python-client>=2.140.0   # YouTube Data API client, Apache-2.0
+google-auth-oauthlib>=1.2.0         # Interactive OAuth flow for first-time auth, Apache-2.0
+google-auth>=2.30.0                 # Credentials / token refresh, Apache-2.0
+
+# --- Antigravity SDK (AI curation step) ---
+# Requires Python 3.10+
+google-antigravity>=0.1.0   # Google Antigravity SDK, Apache-2.0
+litert-lm>=0.1.0            # on-device local model runtime, Apache-2.0
+
+# --- Utilities ---
+python-dotenv>=1.0.1        # load .env config, BSD-3-Clause
+rich>=13.7.1                # pretty CLI output, MIT

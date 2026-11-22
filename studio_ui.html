@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Antigravity Clips Studio | GTA 6 & Live Streamer Shorts</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Vue 3 CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              500: '#22c55e',
+              600: '#16a34a',
+            },
+            accent: {
+              purple: '#8b5cf6',
+              cyan: '#06b6d4',
+              pink: '#ec4899',
+              gold: '#f59e0b',
+            },
+            dark: {
+              900: '#0b0f19',
+              800: '#111827',
+              750: '#162032',
+              700: '#1f2937',
+              600: '#374151',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0b0f19; }
+    ::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #4b5563; }
+    .neon-border { box-shadow: 0 0 15px rgba(6, 182, 212, 0.25); }
+    .neon-purple { box-shadow: 0 0 15px rgba(139, 92, 246, 0.25); }
+  </style>
+</head>
+<body class="bg-dark-900 text-gray-100 min-h-screen flex flex-col font-sans selection:bg-cyan-500 selection:text-black">
+  <div id="app" class="flex flex-col min-h-screen">
+
+    <!-- Top Navigation Bar -->
+    <header class="bg-dark-800/90 backdrop-blur-md border-b border-dark-700/80 sticky top-0 z-50 px-6 py-3.5">
+      <div class="max-w-7xl mx-auto flex items-center justify-between">
+        
+        <!-- Logo & Branding -->
+        <div class="flex items-center space-x-3.5">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 via-purple-600 to-pink-500 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+            <i data-lucide="scissors" class="w-5 h-5 text-white"></i>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent">Antigravity Clips Studio</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-pink-500/20 text-pink-400 border border-pink-500/30 uppercase tracking-wider">GTA 6 Edition</span>
+            </div>
+            <p class="text-xs text-gray-400">Viral 3-Tier Multi-Channel Auto-Clipping Engine</p>
+          </div>
+        </div>
+
+        <!-- Channels & System Badges -->
+        <div class="hidden md:flex items-center space-x-3 text-xs">
+          <!-- Channel 1 Badge -->
+          <div class="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-dark-750 border border-dark-600/60">
+            <div class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></div>
+            <div>
+              <span class="text-gray-400">Channel 1:</span>
+              <span class="font-bold text-gray-200 ml-1">Primary Active</span>
+            </div>
+          </div>
+
+          <!-- Channel 2 Badge -->
+          <div class="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-dark-750 border border-dark-600/60">
+            <div class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse"></div>
+            <div>
+              <span class="text-gray-400">Channel 2:</span>
+              <span class="font-bold text-gray-200 ml-1">Secondary Active</span>
+            </div>
+          </div>
+
+          <!-- Total Shorts Counter -->
+          <div class="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-purple-500/10 border border-purple-500/20 text-purple-300 font-semibold">
+            <i data-lucide="video" class="w-3.5 h-3.5"></i>
+            <span>{{ stats.total_published_shorts || 16 }} Shorts Live</span>
+          </div>
+
+          <!-- Active Tasks Indicator -->
+          <div v-if="runningTasksCount > 0" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-300 font-medium animate-pulse">
+            <i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i>
+            <span>{{ runningTasksCount }} Processing</span>
+          </div>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="bg-dark-800 border-b border-dark-700/80 px-6">
+      <div class="max-w-7xl mx-auto flex space-x-1 overflow-x-auto py-2">
+        <button 
+          v-for="tab in tabs" 
+          :key="tab.id"
+          @click="activeTab = tab.id"
+          :class="[
+            'flex items-center space-x-2 px-4 py-2.5 rounded-lg font-medium text-sm transition-all duration-150 whitespace-nowrap',
+            activeTab === tab.id 
+              ? 'bg-gradient-to-r from-cyan-500/20 to-purple-600/20 text-cyan-300 border border-cyan-500/40 shadow-sm' 
+              : 'text-gray-400 hover:text-gray-200 hover:bg-dark-750'
+          ]">
+          <i :data-lucide="tab.icon" class="w-4 h-4"></i>
+          <span>{{ tab.label }}</span>
+          <span v-if="tab.badge" class="ml-1 text-[10px] px-1.5 py-0.2 rounded-full bg-cyan-500/30 text-cyan-300 font-bold">{{ tab.badge }}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-6 py-6">
+
+      <!-- ========================================== -->
+      <!-- TAB 1: VIRAL VIDEO RADAR (MOST VIEWED CLIPPING) -->
+      <!-- ========================================== -->
+      <section v-show="activeTab === 'viral_radar'" class="space-y-6">
+        
+        <!-- Header & Search Controls -->
+        <div class="bg-dark-800 rounded-2xl p-6 border border-dark-700 shadow-xl space-y-4">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-xl font-bold text-white flex items-center space-x-2">
+                <i data-lucide="flame" class="w-6 h-6 text-pink-500"></i>
+                <span>Viral Video Radar</span>
+              </h2>
+              <p class="text-xs text-gray-400 mt-1">Discover millions-viewed GTA 6 moments on YouTube and turn them into 3-Tier Streamer Shorts with 1-click.</p>
+            </div>
+
+            <!-- Target Channel Selector for Quick Clips -->
+            <div class="flex items-center space-x-2">
+              <span class="text-xs text-gray-400 font-medium">Auto-Upload Channel:</span>
+              <select v-model="quickClipChannel" class="bg-dark-750 border border-dark-600 text-xs rounded-lg px-3 py-2 text-gray-200 focus:outline-none focus:border-cyan-500">
+                <option value="auto">Auto (Failover Priority)</option>
+                <option value="primary">Channel 1 (Primary)</option>
+                <option value="channel2">Channel 2 (Secondary)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Search Input Form -->
+          <div class="flex gap-2">
+            <div class="relative flex-1">
+              <i data-lucide="search" class="w-5 h-5 absolute left-3.5 top-3 text-gray-400"></i>
+              <input 
+                v-model="searchQuery" 
+                @keyup.enter="searchViralVideos"
+                type="text" 
+                placeholder="Search viral moments (e.g., 'IShowSpeed GTA 6 funny stream moments', 'GTA 6 wtf fails')..." 
+                class="w-full bg-dark-750 border border-dark-600 rounded-xl pl-11 pr-4 py-2.5 text-sm text-gray-100 placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition-colors">
+            </div>
+            <button 
+              @click="searchViralVideos" 
+              :disabled="isSearching"
+              class="px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-bold text-sm rounded-xl transition-all shadow-lg shadow-cyan-500/20 disabled:opacity-50 flex items-center space-x-2">
+              <i v-if="isSearching" data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>
+              <i v-else data-lucide="zap" class="w-4 h-4"></i>
+              <span>{{ isSearching ? 'Searching...' : 'Scan Radar' }}</span>
+            </button>
+          </div>
+
+          <!-- Search Quick Presets -->
+          <div class="flex flex-wrap items-center gap-2 pt-1 text-xs">
+            <span class="text-gray-500 font-medium">Quick Presets:</span>
+            <button 
+              v-for="preset in searchPresets" 
+              :key="preset"
+              @click="searchQuery = preset; searchViralVideos()"
+              class="px-2.5 py-1 rounded-md bg-dark-750 hover:bg-dark-700 text-gray-300 border border-dark-600/70 transition-colors">
+              {{ preset }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Search Results Grid -->
+        <div v-if="searchResults.length > 0" class="space-y-4">
+          <div class="flex items-center justify-between text-xs text-gray-400 px-1">
+            <span>Found {{ searchResults.length }} top viral videos</span>
+            <span>Sorted by view count & virality</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div 
+              v-for="video in searchResults" 
+              :key="video.id"
+              class="bg-dark-800 rounded-xl border border-dark-700/80 overflow-hidden hover:border-cyan-500/40 transition-all duration-200 flex flex-col group">
+              
+              <!-- Thumbnail & Views Overlay -->
+              <div class="relative aspect-video w-full bg-black overflow-hidden">
+                <img :src="video.thumbnail" :alt="video.title" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                
+                <!-- View Count Badge -->
+                <div class="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-pink-500/90 text-white font-black text-xs shadow-md flex items-center space-x-1">
+                  <i data-lucide="eye" class="w-3 h-3"></i>
+                  <span>{{ video.view_count_str }} views</span>
+                </div>
+
+                <!-- Duration Badge -->
+                <div class="absolute bottom-2 right-2 px-1.5 py-0.5 rounded bg-black/80 text-gray-200 font-mono text-[11px]">
+                  {{ video.duration_str }}
+                </div>
+              </div>
+
+              <!-- Metadata & Actions -->
+              <div class="p-4 flex-1 flex flex-col justify-between space-y-3">
+                <div>
+                  <h3 class="font-bold text-sm text-gray-100 line-clamp-2 leading-snug">{{ video.title }}</h3>
+                  <p class="text-xs text-gray-400 mt-1 flex items-center space-x-1">
+                    <i data-lucide="user" class="w-3 h-3 text-gray-500"></i>
+                    <span>{{ video.channel || 'Streamer' }}</span>
+                  </p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="grid grid-cols-2 gap-2 pt-2 border-t border-dark-700">
+                  <!-- 1-Click Fast Clip & Upload -->
+                  <button 
+                    @click="oneClickViralClip(video)"
+                    class="w-full py-2 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-400 hover:to-purple-500 text-white font-bold text-xs rounded-lg flex items-center justify-center space-x-1 shadow-md shadow-pink-500/10 transition-all">
+                    <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                    <span>1-Click Clip</span>
+                  </button>
+
+                  <!-- Open in Studio for custom fine-tuning -->
+                  <button 
+                    @click="loadIntoStudio(video)"
+                    class="w-full py-2 bg-dark-750 hover:bg-dark-700 text-cyan-300 hover:text-cyan-200 border border-cyan-500/30 font-semibold text-xs rounded-lg flex items-center justify-center space-x-1 transition-all">
+                    <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
+                    <span>Edit in Studio</span>
+                  </button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div v-else-if="!isSearching" class="bg-dark-800 rounded-2xl p-12 text-center border border-dark-700 space-y-3">
+          <div class="w-16 h-16 rounded-full bg-dark-750 mx-auto flex items-center justify-center text-gray-500">
+            <i data-lucide="radio" class="w-8 h-8 text-cyan-400"></i>
+          </div>
+          <h3 class="font-bold text-gray-200 text-base">Scan YouTube for Viral GTA 6 Moments</h3>
+          <p class="text-xs text-gray-400 max-w-md mx-auto">Click "Scan Radar" above or select one of the quick presets to discover the highest-viewed clips across YouTube streamers.</p>
+        </div>
+
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 2: VIDEO CLIP STUDIO (EDIT & RENDER)  -->
+      <!-- ========================================== -->
+      <section v-show="activeTab === 'clip_studio'" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Left: Studio Controls (2 Columns) -->
+        <div class="lg:col-span-2 space-y-6">
+          <div class="bg-dark-800 rounded-2xl p-6 border border-dark-700 shadow-xl space-y-5">
+            <div class="flex items-center justify-between border-b border-dark-700 pb-3">
+              <h2 class="text-lg font-bold text-white flex items-center space-x-2">
+                <i data-lucide="film" class="w-5 h-5 text-cyan-400"></i>
+                <span>Video Clip Studio</span>
+              </h2>
+              <span class="text-xs text-gray-400">Custom 1080x1920 Short Generator</span>
+            </div>
+
+            <!-- Video Source Input -->
+            <div class="space-y-1.5">
+              <label class="block text-xs font-semibold text-gray-300">Video Source (YouTube URL or Local File Path)</label>
+              <div class="flex gap-2">
+                <input 
+                  v-model="studioForm.video_url_or_path" 
+                  type="text" 
+                  placeholder="https://youtube.com/watch?v=... or pipeline_data/viral_external_shorts/scooter.webm"
+                  class="flex-1 bg-dark-750 border border-dark-600 rounded-xl px-3.5 py-2 text-sm text-gray-100 placeholder-gray-500 focus:outline-none focus:border-cyan-500">
+                
+                <!-- Pick from Downloaded Files Dropdown -->
+                <button 
+                  @click="showLocalMediaPicker = !showLocalMediaPicker" 
+                  class="px-3.5 py-2 bg-dark-750 hover:bg-dark-700 text-gray-300 border border-dark-600 rounded-xl text-xs font-medium flex items-center space-x-1">
+                  <i data-lucide="folder-open" class="w-4 h-4"></i>
+                  <span>Browse Local</span>
+                </button>
+              </div>
+
+              <!-- Local Files Quick Picker Modal/Drawer -->
+              <div v-if="showLocalMediaPicker" class="p-3 bg-dark-750 rounded-xl border border-dark-600 mt-2 space-y-2 max-h-48 overflow-y-auto">
+                <div class="text-xs font-bold text-gray-300">Choose from downloaded video files:</div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-1.5">
+                  <button 
+                    v-for="file in localFiles" 
+                    :key="file.path"
+                    @click="studioForm.video_url_or_path = file.path; showLocalMediaPicker = false"
+                    class="text-left px-2.5 py-1.5 rounded bg-dark-800 hover:bg-dark-700 text-xs text-gray-300 truncate border border-dark-700/60 flex items-center justify-between">
+                    <span class="truncate">{{ file.name }}</span>
+                    <span class="text-[10px] text-gray-500 ml-1">{{ file.size_mb }}MB</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Time Trimming Controls -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-dark-750/70 p-4 rounded-xl border border-dark-700">
+              <div>
+                <label class="block text-xs font-semibold text-gray-300 mb-1">Start Time (Seconds)</label>
+                <input 
+                  v-model.number="studioForm.start_time" 
+                  type="number" 
+                  min="0" 
+                  step="0.5" 
+                  class="w-full bg-dark-800 border border-dark-600 rounded-lg px-3 py-1.5 text-sm text-gray-100">
+                <span class="text-[11px] text-gray-500">E.g., 10 for 10s into the stream</span>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-gray-300 mb-1">Clip Duration (Seconds, Max 59s)</label>
+                <div class="flex items-center space-x-3">
+                  <input 
+                    v-model.number="studioForm.duration" 
+                    type="range" 
+                    min="10" 
+                    max="59" 
+                    class="flex-1 accent-cyan-400">
+                  <span class="font-mono font-bold text-cyan-300 text-sm w-12 text-right">{{ studioForm.duration }}s</span>
+                </div>
+                <span class="text-[11px] text-gray-500">Shorts must be &le; 60 seconds</span>
+              </div>
+            </div>
+
+            <!-- Layout Preset Selector -->
+            <div class="space-y-1.5">
+              <label class="block text-xs font-semibold text-gray-300">Layout Format Engine</label>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <label 
+                  :class="[
+                    'border rounded-xl p-3 flex flex-col items-center text-center cursor-pointer transition-all',
+                    studioForm.layout === '3tier' ? 'border-cyan-500 bg-cyan-500/10 text-cyan-300 font-bold' : 'border-dark-600 bg-dark-750 text-gray-400 hover:border-dark-500'
+                  ]">
+                  <input type="radio" value="3tier" v-model="studioForm.layout" class="hidden">
+                  <i data-lucide="layers" class="w-6 h-6 mb-1 text-cyan-400"></i>
+                  <span class="text-xs">3-Tier Streamer</span>
+                  <span class="text-[10px] text-gray-500 font-normal mt-0.5">Speed / Viral Layout</span>
+                </label>
+
+                <label 
+                  :class="[
+                    'border rounded-xl p-3 flex flex-col items-center text-center cursor-pointer transition-all',
+                    studioForm.layout === 'split_compare' ? 'border-purple-500 bg-purple-500/10 text-purple-300 font-bold' : 'border-dark-600 bg-dark-750 text-gray-400 hover:border-dark-500'
+                  ]">
+                  <input type="radio" value="split_compare" v-model="studioForm.layout" class="hidden">
+                  <i data-lucide="columns" class="w-6 h-6 mb-1 text-purple-400"></i>
+                  <span class="text-xs">GTA 5 vs GTA 6</span>
+                  <span class="text-[10px] text-gray-500 font-normal mt-0.5">Split Comparison Edit</span>
+                </label>
+
+                <label 
+                  :class="[
+                    'border rounded-xl p-3 flex flex-col items-center text-center cursor-pointer transition-all',
+                    studioForm.layout === 'vertical_blur' ? 'border-pink-500 bg-pink-500/10 text-pink-300 font-bold' : 'border-dark-600 bg-dark-750 text-gray-400 hover:border-dark-500'
+                  ]">
+                  <input type="radio" value="vertical_blur" v-model="studioForm.layout" class="hidden">
+                  <i data-lucide="smartphone" class="w-6 h-6 mb-1 text-pink-400"></i>
+                  <span class="text-xs">9:16 Smart Blur</span>
+                  <span class="text-[10px] text-gray-500 font-normal mt-0.5">Standard Vertical Stack</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- 2-Line Headline Customizer -->
+            <div class="space-y-3 bg-dark-750/70 p-4 rounded-xl border border-dark-700">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold text-gray-300">Impact Hook Text (Top Tier)</span>
+                <span class="text-[11px] text-cyan-400">Font: Impact Bold, 58pt, Black Outline</span>
+              </div>
+
+              <div class="space-y-2">
+                <div>
+                  <label class="block text-[11px] text-gray-400">Headline Line 1</label>
+                  <input 
+                    v-model="studioForm.headline_line1" 
+                    type="text" 
+                    placeholder="E.g., THROWS A GUY INTO A" 
+                    class="w-full bg-dark-800 border border-dark-600 rounded-lg px-3 py-1.5 text-sm text-gray-100 uppercase tracking-wide font-bold">
+                </div>
+                <div>
+                  <label class="block text-[11px] text-gray-400">Headline Line 2 (With Emojis)</label>
+                  <input 
+                    v-model="studioForm.headline_line2" 
+                    type="text" 
+                    placeholder="E.g., SPINNING BOAT BLADE! 💀🚤" 
+                    class="w-full bg-dark-800 border border-dark-600 rounded-lg px-3 py-1.5 text-sm text-gray-100 uppercase tracking-wide font-bold">
+                </div>
+              </div>
+
+              <!-- Quick Emoji Bar -->
+              <div class="flex items-center space-x-1.5 pt-1 text-sm">
+                <span class="text-xs text-gray-500 mr-1">Add:</span>
+                <button 
+                  v-for="emoji in ['💀', '😭', '😱', '🔥', '👑', '🚨', '🐊', '🚗', '💔', '⚡']" 
+                  :key="emoji"
+                  @click="studioForm.headline_line2 += ' ' + emoji"
+                  class="px-2 py-0.5 rounded bg-dark-800 hover:bg-dark-700 border border-dark-600">
+                  {{ emoji }}
+                </button>
+              </div>
+            </div>
+
+            <!-- Channel Publishing Destination -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-gray-300 mb-1">Target YouTube Channel</label>
+                <select v-model="studioForm.target_channel" class="w-full bg-dark-750 border border-dark-600 rounded-lg px-3 py-2 text-sm text-gray-100">
+                  <option value="auto">Auto Failover (Check Primary &rarr; Failover Channel 2)</option>
+                  <option value="primary">Channel 1 (Primary)</option>
+                  <option value="channel2">Channel 2 (Secondary)</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-gray-300 mb-1">Publish Action</label>
+                <div class="flex items-center space-x-2 pt-2">
+                  <input type="checkbox" id="upload_yt" v-model="studioForm.upload_to_youtube" class="w-4 h-4 accent-cyan-500 rounded">
+                  <label for="upload_yt" class="text-xs text-gray-300">Upload to YouTube Shorts directly after render</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-3 pt-3">
+              <button 
+                @click="renderStudioClip" 
+                :disabled="isRendering"
+                class="flex-1 py-3 bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-black font-extrabold text-sm rounded-xl transition-all shadow-lg shadow-cyan-500/20 disabled:opacity-50 flex items-center justify-center space-x-2">
+                <i v-if="isRendering" data-lucide="loader-2" class="w-5 h-5 animate-spin"></i>
+                <i v-else data-lucide="play" class="w-5 h-5"></i>
+                <span>{{ isRendering ? 'Rendering Short...' : (studioForm.upload_to_youtube ? 'Render & Publish Short to YouTube' : 'Render Video Only') }}</span>
+              </button>
+
+              <button 
+                @click="generateFramePreview" 
+                :disabled="isPreviewing"
+                class="px-5 py-3 bg-dark-750 hover:bg-dark-700 text-cyan-300 border border-cyan-500/30 rounded-xl text-sm font-bold flex items-center space-x-1.5 transition-all">
+                <i v-if="isPreviewing" data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>
+                <i v-else data-lucide="image" class="w-4 h-4"></i>
+                <span>Preview Frame</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Right: Real-time Layout Visualizer & Live Preview -->
+        <div class="space-y-6">
+          <div class="bg-dark-800 rounded-2xl p-6 border border-dark-700 shadow-xl space-y-4">
+            <h3 class="text-sm font-bold text-gray-200 flex items-center space-x-1.5">
+              <i data-lucide="monitor" class="w-4 h-4 text-cyan-400"></i>
+              <span>Live Visualizer (9:16 Shorts Preview)</span>
+            </h3>
+
+            <!-- Mock 9:16 Frame -->
+            <div class="relative w-full max-w-[280px] mx-auto aspect-[9/16] bg-black rounded-2xl overflow-hidden border-2 border-dark-600 shadow-2xl flex flex-col justify-between">
+              
+              <!-- If we have a generated preview frame -->
+              <img v-if="previewFrameUrl" :src="previewFrameUrl" class="w-full h-full object-cover">
+
+              <!-- Else interactive mock -->
+              <template v-else>
+                <!-- Top Tier: Enlarged Facecam & Headline -->
+                <div class="h-[41%] bg-gradient-to-b from-purple-900/60 to-dark-800 relative flex flex-col items-center justify-start pt-2 px-2 border-b border-dark-600/40">
+                  <div class="text-center font-black text-white text-[11px] leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase">
+                    <div>{{ studioForm.headline_line1 }}</div>
+                    <div>{{ studioForm.headline_line2 }}</div>
+                  </div>
+                  <div class="w-24 h-14 bg-dark-700/80 rounded border border-cyan-400/40 mt-1 flex items-center justify-center text-[9px] text-cyan-300 font-bold">
+                    Webcam (Sharp)
+                  </div>
+                </div>
+
+                <!-- Middle Tier: 16:9 Stream Gameplay -->
+                <div class="h-[36%] bg-dark-900 flex items-center justify-center text-gray-400 text-xs font-semibold border-b border-dark-600/40">
+                  <div class="text-center">
+                    <i data-lucide="gamepad-2" class="w-6 h-6 mx-auto mb-1 text-gray-500"></i>
+                    <span>16:9 Gameplay Stream</span>
+                  </div>
+                </div>
+
+                <!-- Bottom Tier: Lucia & Jason Artwork -->
+                <div class="h-[23%] bg-gradient-to-tr from-pink-900/50 to-purple-900/40 flex items-center justify-center text-center px-2">
+                  <span class="text-[10px] text-pink-300 font-bold tracking-wider uppercase">Official GTA 6 Artwork</span>
+                </div>
+              </template>
+
+            </div>
+
+            <p class="text-center text-[11px] text-gray-500">Exact 1080x1920 layout rendered with FFmpeg Lanczos filtering.</p>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 3: LIVE STREAM STUDIO (LIVE CLIPPING)  -->
+      <!-- ========================================== -->
+      <section v-show="activeTab === 'live_studio'" class="space-y-6">
+        
+        <!-- Live Watcher Daemon Bar -->
+        <div class="bg-dark-800 rounded-2xl p-6 border border-dark-700 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex items-center space-x-4">
+            <div :class="['w-12 h-12 rounded-xl flex items-center justify-center', stats.live_watcher_running ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-dark-750 text-gray-500']">
+              <i data-lucide="radio" class="w-6 h-6 animate-pulse"></i>
+            </div>
+            <div>
+              <div class="flex items-center space-x-2">
+                <h3 class="font-bold text-white text-base">Live Stream Watcher Daemon</h3>
+                <span :class="['text-[10px] font-bold px-2 py-0.5 rounded-full', stats.live_watcher_running ? 'bg-emerald-500/20 text-emerald-400' : 'bg-dark-750 text-gray-400']">
+                  {{ stats.live_watcher_running ? 'RUNNING & POLLING' : 'STOPPED' }}
+                </span>
+              </div>
+              <p class="text-xs text-gray-400 mt-0.5">Monitors YouTube, Twitch, and Kick live streams in real-time, transcribes audio, and extracts viral clips automatically.</p>
+            </div>
+          </div>
+
+          <!-- Watcher Start/Stop Toggle Button -->
+          <button 
+            @click="toggleWatcher(!stats.live_watcher_running)"
+            :class="[
+              'px-6 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center space-x-2 transition-all shadow-md',
+              stats.live_watcher_running 
+                ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30 hover:bg-rose-500/30' 
+                : 'bg-emerald-500 text-black hover:bg-emerald-400 shadow-emerald-500/20'
+            ]">
+            <i :data-lucide="stats.live_watcher_running ? 'square' : 'play'" class="w-4 h-4"></i>
+            <span>{{ stats.live_watcher_running ? 'Stop Live Watcher' : 'Start Live Watcher' }}</span>
+          </button>
+        </div>
+
+        <!-- Add Channel & Watched Channels Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Add Channel Form (1 Column) -->
+          <div class="bg-dark-800 rounded-2xl p-6 border border-dark-700 shadow-xl space-y-4">
+            <h3 class="text-sm font-bold text-white flex items-center space-x-2">
+              <i data-lucide="user-plus" class="w-4 h-4 text-cyan-400"></i>
+              <span>Add Channel to Watch</span>
+            </h3>
+
+            <div class="space-y-3">
+              <div>
+                <label class="block text-xs text-gray-400 mb-1">Channel URL or Shorthand</label>
+                <input 
+                  v-model="newChannelInput" 
+                  type="text" 
+                  placeholder="e.g. youtube:@IShowSpeed, twitch:shroud, or full URL" 
+                  class="w-full bg-dark-750 border border-dark-600 rounded-lg px-3 py-2 text-xs text-gray-100 placeholder-gray-500 focus:outline-none focus:border-cyan-500">
+              </div>
+
+              <div>
+                <label class="block text-xs text-gray-400 mb-1">Display Name (Optional)</label>
+                <input 
+                  v-model="newChannelDisplayName" 
+                  type="text" 
+                  placeholder="e.g. IShowSpeed" 
+                  class="w-full bg-dark-750 border border-dark-600 rounded-lg px-3 py-2 text-xs text-gray-100 placeholder-gray-500 focus:outline-none focus:border-cyan-500">
+              </div>
+
+              <button 
+                @click="addLiveChannel"
+                class="w-full py-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-bold text-xs rounded-lg transition-all shadow-md shadow-cyan-500/10">
+                Add Channel
+              </button>
+            </div>
+          </div>
+
+          <!-- Watched Channels List (2 Columns) -->
+          <div class="lg:col-span-2 bg-dark-800 rounded-2xl p-6 border border-dark-700 shadow-xl space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-bold text-white flex items-center space-x-2">
+                <i data-lucide="tv" class="w-4 h-4 text-purple-400"></i>
+                <span>Registered Stream Channels ({{ watchedChannels.length }})</span>
+              </h3>
+              <button @click="fetchLiveChannels" class="text-xs text-cyan-400 hover:underline">Refresh</button>
+            </div>
+
+            <div class="space-y-2 max-h-72 overflow-y-auto pr-1">
+              <div 
+                v-for="ch in watchedChannels" 
+                :key="ch.id"
+                class="p-3 bg-dark-750 rounded-xl border border-dark-600/60 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                  <div class="w-8 h-8 rounded-lg bg-dark-700 flex items-center justify-center font-bold text-xs uppercase text-cyan-400">
+                    {{ ch.platform.slice(0, 2) }}
+                  </div>
+                  <div>
+                    <div class="font-bold text-xs text-gray-200">{{ ch.display_name || ch.channel }}</div>
+                    <div class="text-[11px] text-gray-400 truncate max-w-xs">{{ ch.url }}</div>
+                  </div>
+                </div>
+
+                <div class="flex items-center space-x-3">
+                  <!-- Toggle enabled -->
+                  <button 
+                    @click="toggleLiveChannel(ch.id, !ch.enabled)"
+                    :class="['text-[11px] px-2.5 py-1 rounded font-semibold', ch.enabled ? 'bg-emerald-500/20 text-emerald-400' : 'bg-dark-600 text-gray-400']">
+                    {{ ch.enabled ? 'Enabled' : 'Disabled' }}
+                  </button>
+                  <!-- Delete button -->
+                  <button @click="deleteLiveChannel(ch.id)" class="text-gray-500 hover:text-rose-400">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div v-if="watchedChannels.length === 0" class="text-center py-6 text-xs text-gray-500">
+                No channels registered yet. Add a live streamer channel above!
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 4: YOUTUBE HUB & PUBLISHED SHORTS      -->
+      <!-- ========================================== -->
+      <section v-show="activeTab === 'youtube_hub'" class="space-y-6">
+        
+        <!-- Channels Status Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          
+          <!-- Channel 1 Card -->
+          <div class="bg-gradient-to-br from-dark-800 to-dark-750 rounded-2xl p-6 border border-dark-700 shadow-xl relative overflow-hidden">
+            <div class="flex items-start justify-between">
+              <div>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 uppercase tracking-wider">Channel 1</span>
+                <h3 class="font-extrabold text-white text-lg mt-1">Primary Account</h3>
+                <p class="text-xs text-gray-400">youtube_token.json</p>
+              </div>
+              <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+                <i data-lucide="check-circle" class="w-5 h-5"></i>
+              </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-dark-700 flex items-center justify-between text-xs text-gray-400">
+              <span>Status: <strong class="text-emerald-400">Connected & Authorized</strong></span>
+              <span>Uploads: <strong class="text-gray-200">{{ primaryUploadsCount }} Shorts</strong></span>
+            </div>
+          </div>
+
+          <!-- Channel 2 Card -->
+          <div class="bg-gradient-to-br from-dark-800 to-dark-750 rounded-2xl p-6 border border-dark-700 shadow-xl relative overflow-hidden">
+            <div class="flex items-start justify-between">
+              <div>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-400 uppercase tracking-wider">Channel 2</span>
+                <h3 class="font-extrabold text-white text-lg mt-1">Secondary Account</h3>
+                <p class="text-xs text-gray-400">youtube_token_channel2.json</p>
+              </div>
+              <div class="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
+                <i data-lucide="shield-check" class="w-5 h-5"></i>
+              </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-dark-700 flex items-center justify-between text-xs text-gray-400">
+              <span>Status: <strong class="text-cyan-400">Connected & Authorized</strong></span>
+              <span>Uploads: <strong class="text-gray-200">{{ channel2UploadsCount }} Shorts</strong></span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Published Shorts Gallery -->
+        <div class="bg-dark-800 rounded-2xl p-6 border border-dark-700 shadow-xl space-y-4">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div>
+              <h3 class="font-bold text-white text-base flex items-center space-x-2">
+                <i data-lucide="youtube" class="w-5 h-5 text-red-500"></i>
+                <span>Published YouTube Shorts Collection ({{ publishedShorts.length }})</span>
+              </h3>
+              <p class="text-xs text-gray-400">All live clips published to your channels with direct links.</p>
+            </div>
+
+            <!-- Filter by Account -->
+            <div class="flex items-center space-x-2">
+              <span class="text-xs text-gray-400">Filter:</span>
+              <select v-model="channelFilter" class="bg-dark-750 border border-dark-600 rounded-lg px-2.5 py-1 text-xs text-gray-200">
+                <option value="all">All Channels</option>
+                <option value="primary">Channel 1 (Primary)</option>
+                <option value="channel2">Channel 2 (Secondary)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Grid of Published Shorts -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div 
+              v-for="short in filteredShorts" 
+              :key="short.video_id"
+              class="bg-dark-750 rounded-xl border border-dark-600 overflow-hidden flex flex-col justify-between group hover:border-cyan-500/40 transition-all">
+              
+              <div class="relative aspect-[9/16] bg-black overflow-hidden">
+                <img :src="short.thumb_url" :alt="short.title" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                
+                <!-- Account Badge -->
+                <div class="absolute top-2 left-2">
+                  <span :class="['text-[10px] font-extrabold px-2 py-0.5 rounded shadow', short.account === 'primary' ? 'bg-emerald-500 text-black' : 'bg-cyan-500 text-black']">
+                    {{ short.account === 'primary' ? 'CH 1' : 'CH 2' }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="p-3 space-y-2">
+                <h4 class="font-bold text-xs text-gray-200 line-clamp-2">{{ short.title }}</h4>
+                <a 
+                  :href="short.url" 
+                  target="_blank" 
+                  class="w-full py-1.5 bg-dark-700 hover:bg-dark-650 text-cyan-300 hover:text-cyan-200 border border-cyan-500/30 rounded-lg text-xs font-semibold flex items-center justify-center space-x-1 transition-all">
+                  <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                  <span>Watch Short</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 5: TASKS & SYSTEM MONITOR              -->
+      <!-- ========================================== -->
+      <section v-show="activeTab === 'tasks'" class="space-y-6">
+        
+        <!-- Live Task Queue -->
+        <div class="bg-dark-800 rounded-2xl p-6 border border-dark-700 shadow-xl space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="font-bold text-white text-base flex items-center space-x-2">
+              <i data-lucide="activity" class="w-5 h-5 text-cyan-400"></i>
+              <span>Active & Recent Background Jobs</span>
+            </h3>
+            <button @click="fetchTasks" class="text-xs text-cyan-400 hover:underline">Refresh</button>
+          </div>
+
+          <div class="space-y-3">
+            <div 
+              v-for="task in tasksList" 
+              :key="task.id"
+              class="p-4 bg-dark-750 rounded-xl border border-dark-600/70 space-y-2">
+              
+              <div class="flex items-center justify-between">
+                <div>
+                  <span class="font-bold text-xs text-gray-200">{{ task.title }}</span>
+                  <span class="text-[10px] text-gray-400 ml-2">({{ task.id }})</span>
+                </div>
+                <span :class="[
+                  'text-[10px] font-bold px-2 py-0.5 rounded-full uppercase',
+                  task.status === 'completed' ? 'bg-emerald-500/20 text-emerald-400' :
+                  task.status === 'failed' ? 'bg-rose-500/20 text-rose-400' : 'bg-cyan-500/20 text-cyan-400 animate-pulse'
+                ]">
+                  {{ task.status }}
+                </span>
+              </div>
+
+              <!-- Progress Bar -->
+              <div class="w-full bg-dark-700 rounded-full h-2 overflow-hidden">
+                <div 
+                  class="bg-gradient-to-r from-cyan-500 to-purple-600 h-2 transition-all duration-300"
+                  :style="{ width: task.progress + '%' }"></div>
+              </div>
+
+              <div class="flex items-center justify-between text-xs text-gray-400">
+                <span>{{ task.message }}</span>
+                <span>{{ task.progress }}%</span>
+              </div>
+
+              <!-- Result info if completed -->
+              <div v-if="task.result && task.result.upload" class="p-2 bg-dark-800 rounded border border-dark-700 text-xs text-emerald-400 flex items-center justify-between">
+                <span>Published to YouTube:</span>
+                <a :href="task.result.upload.youtube?.url" target="_blank" class="font-bold underline">
+                  {{ task.result.upload.youtube?.url }}
+                </a>
+              </div>
+            </div>
+
+            <div v-if="tasksList.length === 0" class="text-center py-6 text-xs text-gray-500">
+              No recent background jobs.
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Vue 3 Application Script -->
+  <script>
+    const { createApp, ref, computed, onMounted, nextTick } = Vue;
+
+    createApp({
+      setup() {
+        const activeTab = ref('viral_radar');
+        const tabs = [
+          { id: 'viral_radar', label: 'Viral Radar (Scan & 1-Click)', icon: 'flame', badge: 'Hot' },
+          { id: 'clip_studio', label: 'Video Clip Studio', icon: 'scissors', badge: null },
+          { id: 'live_studio', label: 'Live Stream Studio', icon: 'radio', badge: null },
+          { id: 'youtube_hub', label: 'YouTube Hub (Both Channels)', icon: 'youtube', badge: null },
+          { id: 'tasks', label: 'Tasks & Monitor', icon: 'activity', badge: null },
+        ];
+
+        // System Stats
+        const stats = ref({});
+        const quickClipChannel = ref('auto');
+
+        // Viral Radar State
+        const searchQuery = ref('IShowSpeed GTA 6 funny stream moments');
+        const isSearching = ref(false);
+        const searchResults = ref([]);
+        const searchPresets = [
+          'IShowSpeed GTA 6 viral',
+          'Speedy Boykins GTA 6',
+          'GTA 6 funny moments shorts',
+          'GTA 6 best fails glitches',
+          'CarryMinati GTA 6 live',
+          'Techno Gamerz GTA 6'
+        ];
+
+        // Studio State
+        const studioForm = ref({
+          video_url_or_path: '',
+          start_time: 0,
+          duration: 55,
+          layout: '3tier',
+          headline_line1: 'GTA 6 INSANE MOMENT',
+          headline_line2: 'WAIT FOR THE END! 😱💀',
+          custom_title: '',
+          caption: '',
+          target_channel: 'auto',
+          upload_to_youtube: true
+        });
+        const isRendering = ref(false);
+        const isPreviewing = ref(false);
+        const previewFrameUrl = ref(null);
+        const showLocalMediaPicker = ref(false);
+        const localFiles = ref([]);
+
+        // Live Studio State
+        const watchedChannels = ref([]);
+        const newChannelInput = ref('');
+        const newChannelDisplayName = ref('');
+
+        // YouTube Hub State
+        const publishedShorts = ref([]);
+        const channelFilter = ref('all');
+
+        // Tasks State
+        const tasksList = ref([]);
+
+        const runningTasksCount = computed(() => {
+          return tasksList.value.filter(t => t.status === 'running').length;
+        });
+
+        const primaryUploadsCount = computed(() => {
+          return publishedShorts.value.filter(s => s.account === 'primary').length;
+        });
+
+        const channel2UploadsCount = computed(() => {
+          return publishedShorts.value.filter(s => s.account === 'channel2').length;
+        });
+
+        const filteredShorts = computed(() => {
+          if (channelFilter.value === 'all') return publishedShorts.value;
+          return publishedShorts.value.filter(s => s.account === channelFilter.value);
+        });
+
+        // Methods
+        const fetchSystemStatus = async () => {
+          try {
+            const res = await fetch('/api/status');
+            stats.value = await res.json();
+          } catch (e) {
+            console.error(e);
+          }
+        };
+
+        const fetchTasks = async () => {
+          try {
+            const res = await fetch('/api/tasks');
+            tasksList.value = await res.json();
+          } catch (e) {
+            console.error(e);
+          }
+        };
+
+        const fetchPublishedShorts = async () => {
+          try {
+            const res = await fetch('/api/youtube/shorts');
+            publishedShorts.value = await res.json();
+          } catch (e) {
+            console.error(e);
+          }
+        };
+
+        const fetchLocalMediaFiles = async () => {
+          try {
+            const res = await fetch('/api/media/files');
+            localFiles.value = await res.json();
+          } catch (e) {
+            console.error(e);
+          }
+        };
+
+        const fetchLiveChannels = async () => {
+          try {
+            const res = await fetch('/api/live/channels');
+            watchedChannels.value = await res.json();
+          } catch (e) {
+            console.error(e);
+          }
+        };
+
+        const searchViralVideos = async () => {
+          if (!searchQuery.value) return;
+          isSearching.value = true;
+          try {
+            const res = await fetch('/api/youtube/search', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ query: searchQuery.value, limit: 12 })
+            });
+            searchResults.value = await res.json();
+            nextTick(() => lucide.createIcons());
+          } catch (e) {
+            alert('Search failed: ' + e);
+          } finally {
+            isSearching.value = false;
+          }
+        };
+
+        const oneClickViralClip = async (video) => {
+          const headline1 = 'GTA 6: ' + video.title.slice(0, 25).toUpperCase();
+          const headline2 = 'VIRAL STREAM MOMENT! 😱💀';
+          
+          const payload = {
+            video_url_or_path: video.url,
+            start_time: 0,
+            duration: Math.min(55, video.duration || 55),
+            layout: '3tier',
+            headline_line1: headline1,
+            headline_line2: headline2,
+            custom_title: `GTA 6: ${video.title.slice(0, 50)} #shorts #gta6`,
+            caption: `${video.title}\n\n#shorts #gta6 #gaming #ishowspeed`,
+            target_channel: quickClipChannel.value,
+            upload_to_youtube: true
+          };
+
+          try {
+            const res = await fetch('/api/clip/render', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+            alert(`Clip task #${data.task_id} launched! Rendering in 3-Tier layout and uploading to YouTube.`);
+            activeTab.value = 'tasks';
+            fetchTasks();
+          } catch (e) {
+            alert('Failed to launch clip: ' + e);
+          }
+        };
+
+        const loadIntoStudio = (video) => {
+          studioForm.value.video_url_or_path = video.url;
+          studioForm.value.start_time = 0;
+          studioForm.value.duration = Math.min(55, video.duration || 55);
+          studioForm.value.headline_line1 = video.title.slice(0, 25).toUpperCase();
+          studioForm.value.headline_line2 = 'MUST WATCH! 😱💀';
+          activeTab.value = 'clip_studio';
+        };
+
+        const renderStudioClip = async () => {
+          if (!studioForm.value.video_url_or_path) {
+            alert('Please specify a video URL or select a local file.');
+            return;
+          }
+          isRendering.value = true;
+          try {
+            const res = await fetch('/api/clip/render', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(studioForm.value)
+            });
+            const data = await res.json();
+            alert(`Task #${data.task_id} started! Processing in background.`);
+            activeTab.value = 'tasks';
+            fetchTasks();
+          } catch (e) {
+            alert('Error starting clip render: ' + e);
+          } finally {
+            isRendering.value = false;
+          }
+        };
+
+        const generateFramePreview = async () => {
+          if (!studioForm.value.video_url_or_path) {
+            alert('Please specify a video source first.');
+            return;
+          }
+          isPreviewing.value = true;
+          try {
+            const res = await fetch('/api/clip/preview', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                video_url_or_path: studioForm.value.video_url_or_path,
+                timestamp: studioForm.value.start_time || 5.0,
+                layout: studioForm.value.layout,
+                headline_line1: studioForm.value.headline_line1,
+                headline_line2: studioForm.value.headline_line2
+              })
+            });
+            const data = await res.json();
+            previewFrameUrl.value = data.preview_url;
+          } catch (e) {
+            alert('Could not generate preview: ' + e);
+          } finally {
+            isPreviewing.value = false;
+          }
+        };
+
+        const addLiveChannel = async () => {
+          if (!newChannelInput.value) return;
+          try {
+            await fetch('/api/live/channels/add', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                channel: newChannelInput.value,
+                display_name: newChannelDisplayName.value
+              })
+            });
+            newChannelInput.value = '';
+            newChannelDisplayName.value = '';
+            fetchLiveChannels();
+          } catch (e) {
+            alert('Failed to add channel: ' + e);
+          }
+        };
+
+        const toggleLiveChannel = async (id, enabled) => {
+          try {
+            await fetch(`/api/live/channels/${id}/toggle?enabled=${enabled}`, { method: 'POST' });
+            fetchLiveChannels();
+          } catch (e) {
+            alert('Error toggling channel: ' + e);
+          }
+        };
+
+        const deleteLiveChannel = async (id) => {
+          if (!confirm('Remove this channel?')) return;
+          try {
+            await fetch(`/api/live/channels/${id}`, { method: 'DELETE' });
+            fetchLiveChannels();
+          } catch (e) {
+            alert('Error removing channel: ' + e);
+          }
+        };
+
+        const toggleWatcher = async (start) => {
+          try {
+            const res = await fetch(`/api/live/watcher/toggle?start=${start}`, { method: 'POST' });
+            const data = await res.json();
+            stats.value.live_watcher_running = data.running;
+          } catch (e) {
+            alert('Error toggling watcher: ' + e);
+          }
+        };
+
+        // Lifecycle & Polling
+        onMounted(() => {
+          lucide.createIcons();
+          fetchSystemStatus();
+          fetchTasks();
+          fetchPublishedShorts();
+          fetchLocalMediaFiles();
+          fetchLiveChannels();
+
+          // Auto-refresh tasks every 4 seconds
+          setInterval(() => {
+            fetchTasks();
+            fetchSystemStatus();
+          }, 4000);
+        });
+
+        return {
+          activeTab,
+          tabs,
+          stats,
+          quickClipChannel,
+          searchQuery,
+          isSearching,
+          searchResults,
+          searchPresets,
+          studioForm,
+          isRendering,
+          isPreviewing,
+          previewFrameUrl,
+          showLocalMediaPicker,
+          localFiles,
+          watchedChannels,
+          newChannelInput,
+          newChannelDisplayName,
+          publishedShorts,
+          channelFilter,
+          tasksList,
+          runningTasksCount,
+          primaryUploadsCount,
+          channel2UploadsCount,
+          filteredShorts,
+          searchViralVideos,
+          oneClickViralClip,
+          loadIntoStudio,
+          renderStudioClip,
+          generateFramePreview,
+          fetchLiveChannels,
+          addLiveChannel,
+          toggleLiveChannel,
+          deleteLiveChannel,
+          toggleWatcher,
+          fetchTasks,
+        };
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>
